@@ -1,11 +1,16 @@
 package db
 
 import (
-	"github.com/gauss2302/buymania_backend/internal/models"
-	_ "github.com/gauss2302/buymania_backend/internal/models"
-	"github.com/jinzhu/gorm"
+	"database/sql"
+	"github.com/go-sql-driver/mysql"
+	"log"
 )
 
-func (u *models.User) FindAllUsers(db *gorm.DB) (*[]models.User, error) {
+func NewMySQLStorage(cfg mysql.Config) (*sql.DB, error) {
+	db, err := sql.Open("mysql", cfg.FormatDSN())
+	if err != nil {
+		log.Fatal(err)
+	}
 
+	return db, nil
 }

@@ -1,7 +1,8 @@
-package config
+package configs
 
 import (
 	"fmt"
+	"github.com/joho/godotenv"
 	"os"
 	"strconv"
 )
@@ -18,7 +19,9 @@ type Config struct {
 var Envs = initConfig()
 
 func initConfig() Config {
-	//godotenv.Load()
+
+	godotenv.Load()
+
 	return Config{
 		PublicHost: getEnv("PUBLIC_HOST", "http://localhost"),
 		Port:       getEnv("PORT", "8080"),

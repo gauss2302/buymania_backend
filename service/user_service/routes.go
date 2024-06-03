@@ -7,6 +7,7 @@ import (
 	"github.com/gauss2302/buymania_backend/utils"
 	"github.com/gorilla/mux"
 	"net/http"
+	"strconv"
 )
 
 type Handler struct {
@@ -57,4 +58,29 @@ func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.WriteJSON(w, http.StatusCreated, nil)
+}
+
+func (h *Handler) handleGetUser(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	str, ok := vars["userID"]
+
+	if !ok {
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("miss user id"))
+		return
+	}
+
+	userID, err := strconv.Atoi(str)
+	if err != nil {
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid user id"))
+		return
+	}
+
+	user, err := h.store.GetUserByID(userID)
+
+	if err != nil {
+		utils.WriteError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, user)
 }
